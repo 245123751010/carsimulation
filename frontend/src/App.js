@@ -254,14 +254,18 @@ class Sensor {
     
     for (let light of trafficLights) {
       const distance = light.y - this.car.y;
-      if (distance > 0 && distance < 200 && distance < minDistance) {
+      // Increased detection range and added distance normalization
+      if (distance > -50 && distance < 300 && distance < minDistance) {
         minDistance = distance;
         nearestLight = light;
       }
     }
     
     if (nearestLight) {
-      return nearestLight.getStateValue();
+      const distance = nearestLight.y - this.car.y;
+      // Return normalized value: closer to light = higher urgency
+      const urgency = 1 - Math.max(0, Math.min(distance / 300, 1));
+      return nearestLight.getStateValue() + (urgency * 0.1); // Add distance factor
     }
     return 1; // No light ahead, assume green
   }
