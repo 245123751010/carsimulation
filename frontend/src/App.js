@@ -224,14 +224,37 @@ class Sensor {
     this.raySpread = Math.PI / 2;
     this.rays = [];
     this.readings = [];
+    this.trafficLightReading = 1; // Default to green (safe)
   }
 
-  update(roadBorders, traffic) {
+  update(roadBorders, traffic, trafficLights) {
     this.castRays();
     this.readings = [];
     for (let i = 0; i < this.rays.length; i++) {
       this.readings.push(this.getReading(this.rays[i], roadBorders, traffic));
     }
+    
+    // Check for upcoming traffic light
+    this.trafficLightReading = this.getTrafficLightReading(trafficLights);
+  }
+
+  getTrafficLightReading(trafficLights) {
+    // Find the nearest traffic light ahead
+    let nearestLight = null;
+    let minDistance = Infinity;
+    
+    for (let light of trafficLights) {
+      const distance = light.y - this.car.y;
+      if (distance > 0 && distance < 200 && distance < minDistance) {
+        minDistance = distance;
+        nearestLight = light;
+      }
+    }
+    
+    if (nearestLight) {
+      return nearestLight.getStateValue();
+    }
+    return 1; // No light ahead, assume green
   }
 
   getReading(ray, roadBorders, traffic) {
