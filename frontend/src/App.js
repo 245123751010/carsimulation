@@ -420,6 +420,8 @@ class Car {
     this.friction = 0.06; // Slightly increased friction
     this.angle = 0;
     this.damaged = false;
+    this.stuckTimer = 0; // Track if car is stuck
+    this.lastY = y;
 
     this.useBrain = controlType === 'AI';
 
