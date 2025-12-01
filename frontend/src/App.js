@@ -746,6 +746,7 @@ function App() {
   const [isPaused, setIsPaused] = useState(false);
   const carsRef = useRef([]);
   const trafficRef = useRef([]);
+  const trafficLightsRef = useRef([]);
   const roadRef = useRef(null);
   const bestCarRef = useRef(null);
   const animationIdRef = useRef(null);
