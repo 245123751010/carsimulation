@@ -44,27 +44,36 @@ const polysIntersect = (poly1, poly2) => {
 
 // Traffic Light class
 class TrafficLight {
-  constructor(y, x) {
+  constructor(y, x, startingPhase = 0) {
     this.y = y;
     this.x = x;
-    this.state = 'red'; // red, yellow, green
-    this.timer = 0;
-    this.redDuration = 200;
-    this.yellowDuration = 50;
-    this.greenDuration = 200;
+    this.state = 'green'; // Start with green to allow initial movement
+    this.timer = startingPhase;
+    this.redDuration = 120; // Reduced from 200
+    this.yellowDuration = 30; // Reduced from 50
+    this.greenDuration = 180; // Reduced from 200
+    
+    // Set initial state based on starting phase
+    if (startingPhase < this.greenDuration) {
+      this.state = 'green';
+    } else if (startingPhase < this.greenDuration + this.yellowDuration) {
+      this.state = 'yellow';
+    } else {
+      this.state = 'red';
+    }
   }
 
   update() {
     this.timer++;
     
-    if (this.state === 'red' && this.timer > this.redDuration) {
-      this.state = 'green';
-      this.timer = 0;
-    } else if (this.state === 'green' && this.timer > this.greenDuration) {
+    if (this.state === 'green' && this.timer > this.greenDuration) {
       this.state = 'yellow';
       this.timer = 0;
     } else if (this.state === 'yellow' && this.timer > this.yellowDuration) {
       this.state = 'red';
+      this.timer = 0;
+    } else if (this.state === 'red' && this.timer > this.redDuration) {
+      this.state = 'green';
       this.timer = 0;
     }
   }
