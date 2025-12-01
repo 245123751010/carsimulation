@@ -755,8 +755,8 @@ class Visualizer {
 function App() {
   const carCanvasRef = useRef(null);
   const networkCanvasRef = useRef(null);
-  const [carCount, setCarCount] = useState(100);
-  const [mutationRate, setMutationRate] = useState(0.1);
+  const [carCount, setCarCount] = useState(50);
+  const [mutationRate, setMutationRate] = useState(0.2);
   const [isPaused, setIsPaused] = useState(false);
   const carsRef = useRef([]);
   const trafficRef = useRef([]);
