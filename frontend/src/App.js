@@ -921,7 +921,7 @@ function App() {
                 value={[carCount]}
                 onValueChange={handleCarCountChange}
                 min={1}
-                max={500}
+                max={200}
                 step={1}
                 className="control-slider"
               />
