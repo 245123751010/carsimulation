@@ -562,6 +562,14 @@ class Road {
       [topLeft, bottomLeft],
       [topRight, bottomRight]
     ];
+
+    // Create intersections
+    this.intersections = [
+      { y: -200, width: this.width },
+      { y: -600, width: this.width },
+      { y: -1000, width: this.width },
+      { y: -1400, width: this.width }
+    ];
   }
 
   getLaneCenter(laneIndex) {
@@ -589,6 +597,31 @@ class Road {
       ctx.moveTo(border[0].x, border[0].y);
       ctx.lineTo(border[1].x, border[1].y);
       ctx.stroke();
+    });
+
+    // Draw intersections
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+    ctx.lineWidth = 3;
+    this.intersections.forEach(intersection => {
+      const height = 80;
+      ctx.fillRect(this.left, intersection.y - height / 2, this.width, height);
+      ctx.strokeRect(this.left, intersection.y - height / 2, this.width, height);
+      
+      // Draw crosswalk lines
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+      ctx.lineWidth = 4;
+      for (let i = 0; i < 5; i++) {
+        const lineX = lerp(this.left + 10, this.right - 10, i / 4);
+        ctx.beginPath();
+        ctx.moveTo(lineX, intersection.y - height / 2 + 5);
+        ctx.lineTo(lineX, intersection.y - height / 2 + 20);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(lineX, intersection.y + height / 2 - 20);
+        ctx.lineTo(lineX, intersection.y + height / 2 - 5);
+        ctx.stroke();
+      }
     });
   }
 }
