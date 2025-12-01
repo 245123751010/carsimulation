@@ -442,6 +442,19 @@ class Car {
       this.move();
       this.createPolygon();
       this.damaged = this.assessDamage(roadBorders, traffic);
+      
+      // Anti-stuck mechanism: check if car hasn't moved
+      if (Math.abs(this.y - this.lastY) < 0.1) {
+        this.stuckTimer++;
+        // If stuck for too long, give a small nudge
+        if (this.stuckTimer > 100 && this.useBrain) {
+          this.speed = 0.5; // Small forward push
+          this.stuckTimer = 0;
+        }
+      } else {
+        this.stuckTimer = 0;
+      }
+      this.lastY = this.y;
     }
     if (this.sensor) {
       this.sensor.update(roadBorders, traffic, trafficLights);
