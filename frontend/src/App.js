@@ -775,23 +775,21 @@ function App() {
 
     roadRef.current = new Road(carCanvas.width / 2, carCanvas.width * 0.9);
 
-    // Generate traffic lights at intersections
+    // Generate traffic lights at intersections with staggered phases
     trafficLightsRef.current = [
-      new TrafficLight(-200, carCanvas.width / 2 + 60),
-      new TrafficLight(-600, carCanvas.width / 2 + 60),
-      new TrafficLight(-1000, carCanvas.width / 2 + 60),
-      new TrafficLight(-1400, carCanvas.width / 2 + 60)
+      new TrafficLight(-200, carCanvas.width / 2 + 60, 0),
+      new TrafficLight(-600, carCanvas.width / 2 + 60, 90),
+      new TrafficLight(-1000, carCanvas.width / 2 + 60, 180),
+      new TrafficLight(-1400, carCanvas.width / 2 + 60, 270)
     ];
 
-    // Generate traffic
+    // Generate traffic - reduced density and better spacing
     trafficRef.current = [
-      new Car(roadRef.current.getLaneCenter(1), -100, 30, 50, 'DUMMY', 2),
-      new Car(roadRef.current.getLaneCenter(0), -350, 30, 50, 'DUMMY', 2),
-      new Car(roadRef.current.getLaneCenter(2), -350, 30, 50, 'DUMMY', 2),
-      new Car(roadRef.current.getLaneCenter(0), -550, 30, 50, 'DUMMY', 2),
-      new Car(roadRef.current.getLaneCenter(1), -800, 30, 50, 'DUMMY', 2),
-      new Car(roadRef.current.getLaneCenter(2), -950, 30, 50, 'DUMMY', 2),
-      new Car(roadRef.current.getLaneCenter(1), -1200, 30, 50, 'DUMMY', 2)
+      new Car(roadRef.current.getLaneCenter(1), -120, 30, 50, 'DUMMY', 2),
+      new Car(roadRef.current.getLaneCenter(0), -400, 30, 50, 'DUMMY', 2),
+      new Car(roadRef.current.getLaneCenter(2), -700, 30, 50, 'DUMMY', 2),
+      new Car(roadRef.current.getLaneCenter(1), -1100, 30, 50, 'DUMMY', 2),
+      new Car(roadRef.current.getLaneCenter(0), -1300, 30, 50, 'DUMMY', 2)
     ];
 
     generateCars(carCount);
