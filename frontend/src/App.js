@@ -42,6 +42,102 @@ const polysIntersect = (poly1, poly2) => {
   return false;
 };
 
+// Traffic Light class
+class TrafficLight {
+  constructor(y, x) {
+    this.y = y;
+    this.x = x;
+    this.state = 'red'; // red, yellow, green
+    this.timer = 0;
+    this.redDuration = 200;
+    this.yellowDuration = 50;
+    this.greenDuration = 200;
+  }
+
+  update() {
+    this.timer++;
+    
+    if (this.state === 'red' && this.timer > this.redDuration) {
+      this.state = 'green';
+      this.timer = 0;
+    } else if (this.state === 'green' && this.timer > this.greenDuration) {
+      this.state = 'yellow';
+      this.timer = 0;
+    } else if (this.state === 'yellow' && this.timer > this.yellowDuration) {
+      this.state = 'red';
+      this.timer = 0;
+    }
+  }
+
+  draw(ctx) {
+    const size = 15;
+    const spacing = 5;
+    
+    // Traffic light box
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.fillRect(this.x - size - 5, this.y - size * 3 - spacing * 2 - 5, size * 2 + 10, size * 3 + spacing * 2 + 10);
+    
+    // Red light
+    ctx.beginPath();
+    ctx.arc(this.x, this.y - size * 2 - spacing * 2, size, 0, Math.PI * 2);
+    ctx.fillStyle = this.state === 'red' ? '#ef4444' : '#7f1d1d';
+    ctx.fill();
+    if (this.state === 'red') {
+      ctx.shadowColor = '#ef4444';
+      ctx.shadowBlur = 20;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+    
+    // Yellow light
+    ctx.beginPath();
+    ctx.arc(this.x, this.y - size - spacing, size, 0, Math.PI * 2);
+    ctx.fillStyle = this.state === 'yellow' ? '#fbbf24' : '#78350f';
+    ctx.fill();
+    if (this.state === 'yellow') {
+      ctx.shadowColor = '#fbbf24';
+      ctx.shadowBlur = 20;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+    
+    // Green light
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, size, 0, Math.PI * 2);
+    ctx.fillStyle = this.state === 'green' ? '#22c55e' : '#14532d';
+    ctx.fill();
+    if (this.state === 'green') {
+      ctx.shadowColor = '#22c55e';
+      ctx.shadowBlur = 20;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+  }
+
+  getStopLine() {
+    return this.y + 40;
+  }
+
+  shouldStop(carY, carHeight) {
+    const stopLine = this.getStopLine();
+    const carFront = carY - carHeight / 2;
+    const detectionZone = 100;
+    
+    return (
+      this.state === 'red' &&
+      carFront < stopLine &&
+      carFront > stopLine - detectionZone
+    );
+  }
+
+  getStateValue() {
+    // Return value for neural network: red=0, yellow=0.5, green=1
+    if (this.state === 'red') return 0;
+    if (this.state === 'yellow') return 0.5;
+    return 1;
+  }
+}
+
 // Neural Network implementation
 class NeuralNetwork {
   constructor(neuronCounts) {
