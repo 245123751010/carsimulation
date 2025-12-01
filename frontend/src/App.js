@@ -412,7 +412,8 @@ class Car {
 
     if (controlType !== 'DUMMY') {
       this.sensor = new Sensor(this);
-      this.brain = new NeuralNetwork([this.sensor.rayCount, 6, 4]);
+      // Updated network: 5 sensors + 1 traffic light state = 6 inputs
+      this.brain = new NeuralNetwork([6, 8, 4]);
     }
     this.controls = new Controls(controlType);
 
