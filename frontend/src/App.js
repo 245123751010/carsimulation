@@ -974,6 +974,10 @@ function App() {
                 <div className="car-indicator traffic" />
                 <span>Traffic Obstacles</span>
               </div>
+              <div className="info-item">
+                <div className="traffic-light-indicator" />
+                <span>Traffic Lights</span>
+              </div>
             </div>
 
             <div className="instructions">
