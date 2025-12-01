@@ -415,9 +415,9 @@ class Car {
     this.height = height;
 
     this.speed = 0;
-    this.acceleration = 0.2;
+    this.acceleration = 0.25; // Increased for better movement
     this.maxSpeed = maxSpeed;
-    this.friction = 0.05;
+    this.friction = 0.06; // Slightly increased friction
     this.angle = 0;
     this.damaged = false;
 
