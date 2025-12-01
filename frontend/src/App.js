@@ -840,6 +840,12 @@ function App() {
     carCtx.translate(0, -bestCarRef.current.y + carCanvas.height * 0.7);
 
     roadRef.current.draw(carCtx);
+    
+    // Draw traffic lights
+    for (let i = 0; i < trafficLightsRef.current.length; i++) {
+      trafficLightsRef.current[i].draw(carCtx);
+    }
+    
     for (let i = 0; i < trafficRef.current.length; i++) {
       trafficRef.current[i].draw(carCtx, '#f87171');
     }
