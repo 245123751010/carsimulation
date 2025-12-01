@@ -807,7 +807,9 @@ function App() {
   const generateCars = (N) => {
     const cars = [];
     for (let i = 0; i < N; i++) {
-      cars.push(new Car(roadRef.current.getLaneCenter(1), 100, 30, 50, 'AI'));
+      // Distribute cars across lanes for better starting positions
+      const lane = i % 3;
+      cars.push(new Car(roadRef.current.getLaneCenter(lane), 100, 30, 50, 'AI'));
     }
     carsRef.current = cars;
 
