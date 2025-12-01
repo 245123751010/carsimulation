@@ -421,18 +421,20 @@ class Car {
     this.createPolygon();
   }
 
-  update(roadBorders, traffic) {
+  update(roadBorders, traffic, trafficLights) {
     if (!this.damaged) {
       this.move();
       this.createPolygon();
       this.damaged = this.assessDamage(roadBorders, traffic);
     }
     if (this.sensor) {
-      this.sensor.update(roadBorders, traffic);
+      this.sensor.update(roadBorders, traffic, trafficLights);
       const offsets = this.sensor.readings.map(s =>
         s == null ? 0 : 1 - s.offset
       );
-      const outputs = NeuralNetwork.feedForward(offsets, this.brain);
+      // Add traffic light state to inputs
+      const inputs = [...offsets, this.sensor.trafficLightReading];
+      const outputs = NeuralNetwork.feedForward(inputs, this.brain);
 
       if (this.useBrain) {
         this.controls.forward = outputs[0];
