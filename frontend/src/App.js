@@ -817,11 +817,16 @@ function App() {
     const networkCtx = networkCanvas.getContext('2d');
 
     if (!isPaused) {
+      // Update traffic lights
+      for (let i = 0; i < trafficLightsRef.current.length; i++) {
+        trafficLightsRef.current[i].update();
+      }
+      
       for (let i = 0; i < trafficRef.current.length; i++) {
-        trafficRef.current[i].update(roadRef.current.borders, []);
+        trafficRef.current[i].update(roadRef.current.borders, [], []);
       }
       for (let i = 0; i < carsRef.current.length; i++) {
-        carsRef.current[i].update(roadRef.current.borders, trafficRef.current);
+        carsRef.current[i].update(roadRef.current.borders, trafficRef.current, trafficLightsRef.current);
       }
       bestCarRef.current = carsRef.current.find(
         c => c.y === Math.min(...carsRef.current.map(c => c.y))
