@@ -985,6 +985,7 @@ function App() {
               <ul className="instructions-list">
                 <li>Cars use ray-casting sensors to detect obstacles</li>
                 <li>Neural network controls steering, acceleration & braking</li>
+                <li>AI learns to obey traffic lights at intersections</li>
                 <li>Best performing car is highlighted in green</li>
                 <li>Save the brain when a car performs well</li>
                 <li>Mutation creates variations for learning</li>
