@@ -1,651 +1,1107 @@
-
-2.	
-(a)	Implement Naïve Bayes Classification using the Iris dataset and predict the class of a new instance.  5b
-(b)	Implement K-Nearest Neighbors (KNN) Regression using the Diabetes dataset and predict the target value of a new instance.   5d 
-
-
-3.	
-(a)	Implement Multiclass Logistic Regression using the Iris dataset and predict the class of a new instance.  5a 
-(b)	Implement Support Vector Machine (SVM) Regression using the Diabetes dataset and predict the target value of a new instance.  5e
- 
-
-4.	
-(a)	Implement Decision Tree Classification using the Iris dataset and predict the class of a new instance.   5c 
-(b)	Implement K-Means Clustering and visualize the clusters.   7a
-
-
-5.	
-(a)	Implement K-Nearest Neighbors (KNN) Classification using the Iris dataset and predict the class of a new instance.   5d
-(b)	Implement Agglomerative Hierarchical Clustering and visualize the clusters.   7b
-
-
-6.	
-(a)	Implement Support Vector Machine (SVM) Classification using the Iris dataset and predict the class of a new instance.   5e
-(b)	Implement Gaussian Mixture Model (GMM) clustering using the Expectation Maximization (EM) algorithm and visualize the clusters.    7c
-
-		
-8.	  Evaluate various classification algorithms performance on a dataset using measures such as True positive rate, False positive rate, F-score, Accuracy etc.   6
-
-
-
-
-
-
-
-
-
-2a Implement Naïve Bayes Classification using the Iris dataset and predict the class of a new instance.
-
-Naive Bayes Classification using Scikit-learn (Iris Dataset)
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
-from sklearn.naive_bayes import GaussianNB
-from sklearn.metrics import accuracy_score, confusion_matrix, precision_score, recall_score
-
-iris = load_iris()
-
-X = iris.data
-y = iris.target
-
-X_train, X_test, y_train, y_test = train_test_split(
-X, y, test_size=0.2, random_state=42
-
-)
-
-model = GaussianNB()
-
-model.fit(X_train, y_train)
-
-predicted = model.predict(X_test)
-
-print("Predicted:", predicted[:10])
-print("Actual :", y_test[:10])
-
-accuracy = accuracy_score(y_test, predicted)
-precision = precision_score(y_test, predicted, average='macro')
-recall = recall_score(y_test, predicted, average='macro')
-cm = confusion_matrix(y_test, predicted)
-
-print("Accuracy:", accuracy)
-print("Precision:", precision)
-print("Recall:", recall)
-print("Confusion Matrix:")
-print(cm)
-
-Output:
-Predicted: [1 0 2 1 1 0 1 2 1 1]
-Actual : [1 0 2 1 1 0 1 2 1 1]
-Accuracy: 1.0
-Precision: 1.0
-Recall: 1.0
-Confusion Matrix:
-
-[[10 0 0]
-[ 0 9 0]
-[ 0 0 11]]
-
-
-
-
-2b Implement K-Nearest Neighbors (KNN) Regression using the Diabetes dataset and predict the target value of a new instance.
-
-K-Nearest Neighbors (KNN) Regression using Scikit-learn (Diabetes Dataset)
-import numpy as np
-from sklearn.datasets import load_diabetes
-from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.metrics import mean_squared_error, r2_score
-
-data = load_diabetes()
-X = data.data
-y = data.target
-
-x_train, x_test, y_train, y_test = train_test_split(
-X, y, test_size=0.2, random_state=42
-)
-
-model = KNeighborsRegressor(n_neighbors=3)
-
-model.fit(x_train, y_train)
-
-y_pred = model.predict(x_test)
-
-print("Predicted:", y_pred[:5])
-print("Actual :", y_test[:5])
-
-mse = mean_squared_error(y_test, y_pred)
-r2 = r2_score(y_test, y_pred)
-
-print("MSE:", mse)
-print("R2 Score:", r2)
-
-Output:
-Predicted: [130.66666667 194.66666667 145. 239. 168.66666667]
-Actual : [219. 70. 202. 230. 111.]
-MSE: 3364.3932584269664
-R2 Score: 0.36498737331014663
-
-
-
-
-
-
-
-3a Implement Multiclass Logistic Regression using the Iris dataset and predict the class of a new instance. 
-
-Multiclass Logistic Regression using Scikit-learn (Iris Dataset)
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
-
-from sklearn.metrics import accuracy_score, confusion_matrix
-
-df = pd.read_csv("IRIS.csv")
-
-df['species'] = df['species'].map({
-'Iris-setosa': 0,
-'Iris-versicolor': 1,
-'Iris-virginica': 2
-})
-
-X = df.drop("species", axis=1)
-y = df["species"]
-
-X_train, X_test, y_train, y_test = train_test_split(
-X, y, test_size=0.2, random_state=42
-)
-
-scaler = StandardScaler()
-X_train = scaler.fit_transform(X_train)
-X_test = scaler.transform(X_test)
-
-model = LogisticRegression(multi_class='multinomial', max_iter=200)
-model.fit(X_train, y_train)
-
-y_pred = model.predict(X_test)
-
-print("Predicted:", y_pred[:10])
-print("Actual :", y_test.values[:10])
-
-accuracy = accuracy_score(y_test, y_pred)
-print("Accuracy:", accuracy)
-
-cm = confusion_matrix(y_test, y_pred)
-print("Confusion Matrix:")
-print(cm)
-
-Output:
-Predicted: [1 0 2 1 1 0 1 2 1 1]
-Actual : [1 0 2 1 1 0 1 2 1 1]
-Accuracy: 1.0
-Confusion Matrix:
-[[10 0 0]
-[ 0 9 0]
-[ 0 0 11]]
-
-
-
-
-3b Implement Support Vector Machine (SVM) Regression using the Diabetes dataset and predict the target value of a new instance.
-
-Support Vector Machine (SVM) Regression using Scikit-learn (Diabetes Dataset)
-import numpy as np
-from sklearn.datasets import load_diabetes
-from sklearn.model_selection import train_test_split
-from sklearn.svm import SVR
-from sklearn.metrics import mean_squared_error, r2_score
-
-data = load_diabetes()
-X = data.data
-y = data.target
-
-x_train, x_test, y_train, y_test = train_test_split(
-X, y, test_size=0.2, random_state=42
-)
-
-model = SVR(kernel='linear')
-
-model.fit(x_train, y_train)
-
-y_pred = model.predict(x_test)
-
-print("Predicted:", y_pred[:5])
-print("Actual :", y_test[:5])
-
-mse = mean_squared_error(y_test, y_pred)
-r2 = r2_score(y_test, y_pred)
-
-print("MSE:", mse)
-print("R2 Score:", r2)
-
-Output:
-Predicted: [142.25188635 141.49730024 141.99010604 145.04413163 141.5545753 ]
-Actual : [219. 70. 202. 230. 111.]
-MSE: 5190.387663027928
-R2 Score: 0.020339939398460127
-
-
-
-
-
-
-
-4a Implement Decision Tree Classification using the Iris dataset and predict the class of a new instance.
-
-Decision Tree Classification using Scikit-learn (Iris Dataset)
-import numpy as np
-import matplotlib.pyplot as plt
-
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier, plot_tree
-from sklearn.metrics import accuracy_score, classification_report
-
-iris = load_iris()
-
-X = iris.data
-y = iris.target
-
-x_train, x_test, y_train, y_test = train_test_split(
-X, y, test_size=0.2, random_state=42
-)
-
-clf_model = DecisionTreeClassifier(
-criterion="gini",
-max_depth=3,
-min_samples_leaf=5,
-random_state=42
-
-)
-
-clf_model.fit(x_train, y_train)
-
-y_predict = clf_model.predict(x_test)
-
-print("Predicted:", y_predict)
-print("Actual :", y_test)
-
-accuracy = accuracy_score(y_test, y_predict)
-print("Accuracy:", accuracy)
-
-print("Classification Report:\n", classification_report(y_test, y_predict))
-
-plt.figure(figsize=(10,6))
-plot_tree(clf_model, filled=True)
-plt.show()
-
-Output:
-Predicted: [1 0 2 1 1 0 1 2 1 1 2 0 0 0 0 1 2 1 1 2 0 2 0 2 2 2 2 2 0 0]
-Actual : [1 0 2 1 1 0 1 2 1 1 2 0 0 0 0 1 2 1 1 2 0 2 0 2 2 2 2 2 0 0]
-Accuracy: 1.0
-Classification Report:
-precision recall f1-score support
-
-0 1.00 1.00 1.00 10
-1 1.00 1.00 1.00 9
-2 1.00 1.00 1.00 11
-
-accuracy 1.00 30
-macro avg 1.00 1.00 1.00 30
-weighted avg 1.00 1.00 1.00 30
-
-
-
-4b Implement K-Means Clustering and visualize the clusters.
-
-Implement K-Means Clustering and visualize the clusters.
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.datasets import load_iris
-from sklearn.cluster import KMeans
-
-data = load_iris()
-X = data.data[:, :2]
-
-model = KMeans(n_clusters=3, random_state=42)
-model.fit(X)
-
-labels = model.labels_
-centroids = model.cluster_centers_
-
-print("Centroids:\n", centroids)
-print("Cluster Labels:\n", labels)
-
-plt.figure(figsize=(8, 6))
-
-plt.scatter(X[:, 0], X[:, 1],
-c=labels,
-cmap='viridis',
-s=50)
-
-plt.scatter(centroids[:, 0],
-centroids[:, 1],
-marker='X',
-s=200)
-
-plt.title("K-Means Clustering")
-plt.xlabel("Sepal Length")
-plt.ylabel("Sepal Width")
-plt.grid(True)
-plt.show()
-Output:
-Centroids:
-[[6.81276596 3.07446809]
-[5.77358491 2.69245283]
-[5.006 3.428 ]]
-Cluster Labels:
-[2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
-2 2 2 2 2 2 2 2 2 2 2 2 2 0 0 0 1 0 1 0 1 0 1 1 1 1 1 1 0 1 1 1 1 1 1 1 1
-0 0 0 0 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1 1 1 1 1 1 1 1 0 1 0 0 0 0 1 0 0 0 0
-0 0 1 1 0 0 0 0 1 0 1 0 1 0 0 1 1 0 0 0 0 0 1 1 0 0 0 1 0 0 0 1 0 0 0 1 0
-0 1]
-
-
-
-
-
-
-5a Implement K-Nearest Neighbors (KNN) Classification using the Iris dataset and predict the class of a new instance.
-
-K-Nearest Neighbors (KNN) Classification using Scikit-learn (Iris Dataset)
-
-import numpy as np
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix, precision_score, recall_score
-
-data = load_iris()
-X = data.data
-y = data.target
-
-x_train, x_test, y_train, y_test = train_test_split(
-X, y, test_size=0.2, random_state=42
-)
-
-model = KNeighborsClassifier(n_neighbors=3)
-
-model.fit(x_train, y_train)
-
-y_pred = model.predict(x_test)
-
-accuracy = accuracy_score(y_test, y_pred)
-precision = precision_score(y_test, y_pred, average='macro')
-recall = recall_score(y_test, y_pred, average='macro')
-cm = confusion_matrix(y_test, y_pred)
-
-print("Accuracy:", accuracy)
-print("Precision:", precision)
-print("Recall:", recall)
-print("Confusion Matrix:")
-print(cm)
-
-Output:
-Accuracy: 1.0
-Precision: 1.0
-Recall: 1.0
-Confusion Matrix:
-[[10 0 0]
-[ 0 9 0]
-[ 0 0 11]]
-
-
-
-
-
-5b Implement Agglomerative Hierarchical Clustering and visualize the clusters.
-
-Hierarchical (Agglomerative)
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.datasets import load_iris
-from sklearn.cluster import AgglomerativeClustering
-from scipy.cluster.hierarchy import dendrogram, linkage
-
-data = load_iris()
-X = data.data[:, :2]
-
-model = AgglomerativeClustering(n_clusters=3)
-
-labels = model.fit_predict(X)
-
-print("Cluster Labels:\n", labels)
-
-plt.figure(figsize=(8, 6))
-plt.scatter(X[:, 0], X[:, 1],
-c=labels,
-cmap='viridis',
-s=50)
-
-plt.title("Agglomerative Hierarchical Clustering")
-plt.xlabel("Sepal Length")
-plt.ylabel("Sepal Width")
-plt.grid(True)
-plt.show()
-
-Z = linkage(X, method='ward')
-plt.figure(figsize=(10, 5))
-dendrogram(Z)
-plt.title("Dendrogram")
-plt.xlabel("Data Points")
-plt.ylabel("Distance")
-plt.show()
-Output:
-Cluster Labels:
-[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 2 0 2 0 1 0 1 1 0 2 0 2 0 2 2 2 2 0 0 2 0
-0 0 0 0 0 2 2 2 2 0 2 0 0 2 2 2 2 0 2 1 2 2 2 0 1 2 0 2 0 0 0 0 1 0 0 0 0
-0 0 2 2 0 0 0 0 2 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 2 0 0 0]
-
-
-
-
-
-
-
-6a Implement Support Vector Machine (SVM) Classification using the Iris dataset and predict the class of a new instance.
-
-Support Vector Machine (SVM) Classification using Scikit-learn (Iris Dataset)
-import numpy as np
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
-from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, confusion_matrix, precision_score, recall_score
-
-data = load_iris()
-X = data.data
-y = data.target
-
-x_train, x_test, y_train, y_test = train_test_split(
-X, y, test_size=0.2, random_state=42
-)
-
-model = SVC(kernel='linear')
-
-model.fit(x_train, y_train)
-
-y_pred = model.predict(x_test)
-
-accuracy = accuracy_score(y_test, y_pred)
-precision = precision_score(y_test, y_pred, average='macro')
-recall = recall_score(y_test, y_pred, average='macro')
-cm = confusion_matrix(y_test, y_pred)
-
-print("Accuracy:", accuracy)
-print("Precision:", precision)
-print("Recall:", recall)
-print("Confusion Matrix:")
-print(cm)
-
-Output:
-Accuracy: 1.0
-Precision: 1.0
-Recall: 1.0
-Confusion Matrix:
-[[10 0 0]
-[ 0 9 0]
-[ 0 0 11]]
-
-
-
-
-
-6b Implement Gaussian Mixture Model (GMM) clustering using the Expectation Maximization (EM) algorithm and visualize the clusters.
-
-Expectation Maximization (Gaussian Mixture)
-import numpy as np
-import matplotlib.pyplot as plt
-
-from sklearn.datasets import load_iris
-from sklearn.mixture import GaussianMixture
-
-data = load_iris()
-X = data.data[:, :2]
-
-model = GaussianMixture(
-n_components=3,
-random_state=42
-)
-model.fit(X)
-
-labels = model.predict(X)
-print("Cluster Labels:\n", labels)
-print("\nMeans:\n", model.means_)
-print("\nCovariances:\n", model.covariances_)
-print("\nWeights:\n", model.weights_)
-
-plt.figure(figsize=(8,6))
-plt.scatter(X[:,0], X[:,1],
-c=labels,
-cmap='viridis',
-s=50)
-
-plt.xlabel("Sepal Length")
-plt.ylabel("Sepal Width")
-plt.title("Expectation Maximization (Gaussian Mixture Model)")
-plt.grid(True)
-plt.show()
-
-Output:
-Cluster Labels:
-[2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
-2 2 2 2 1 2 2 2 2 2 2 2 2 0 0 0 1 1 1 0 1 0 1 1 1 1 1 1 0 1 1 1 1 1 1 1 1
-1 0 0 0 1 1 1 1 1 1 1 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 0 1 0 1 0 0 1 0 0 0 0
-1 0 1 1 0 0 0 0 1 0 1 0 1 0 0 1 1 1 0 0 0 1 1 1 0 0 0 1 0 0 0 1 0 0 0 1 0
-0 1]
-
-Means:
-[[6.68055626 3.02849627]
-[5.9009976 2.74387546]
-[5.01507898 3.4514463 ]]
-
-Covariances:
-[[[0.36153508 0.05159664]
-[0.05159664 0.08927917]]
-
-[[0.27671149 0.08897036]
-[0.08897036 0.09389206]]
-
-[[0.11944714 0.08835648]
-[0.08835648 0.11893388]]]
-
-Weights:
-[0.29474143 0.38081285 0.32444572]
-
-
-
-
-
-
-
-
-8 Evaluate various classification algorithms performance on a dataset using measures such as True positive rate, False positive rate, F-score, Accuracy etc.
-
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.datasets import load_wine
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.svm import SVC
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.naive_bayes import GaussianNB
-from sklearn.metrics import accuracy_score, precision_score
-from sklearn.metrics import recall_score, f1_score
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import ConfusionMatrixDisplay
-
-data = load_wine()
-X = data.data
-y = data.target
-
-print("Number of Samples:", X.shape[0])
-print("Number of Features:", X.shape[1])
-print("Classes:", np.unique(y))
-
-X_train, X_test, y_train, y_test = train_test_split(
-X, y, test_size=0.2, random_state=42
-)
-scaler = StandardScaler()
-X_train = scaler.fit_transform(X_train)
-X_test = scaler.transform(X_test)
-
-def compute_fpr_multiclass(y_true, y_pred):
-cm = confusion_matrix(y_true, y_pred)
-fpr_list = []
-for i in range(cm.shape[0]):
-tp = cm[i, i]
-fn = np.sum(cm[i, :]) - tp
-fp = np.sum(cm[:, i]) - tp
-tn = np.sum(cm) - (tp + fp + fn)
-fpr = fp / (fp + tn) if (fp + tn) != 0 else 0
-fpr_list.append(fpr)
-
-return np.mean(fpr_list)
-
-models = {
-"Logistic Regression": LogisticRegression(max_iter=5000),
-"KNN": KNeighborsClassifier(n_neighbors=5),
-"SVM": SVC(kernel='linear'),
-"Decision Tree": DecisionTreeClassifier(random_state=42),
-"Naive Bayes": GaussianNB()
+Program 1 — Java + Docker + Git
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: Java program, Docker image, push to GitHub & DockerHub
+HelloWorld.java
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello from DevOps Lab!");
+    }
 }
+Copy
+Dockerfile
+FROM openjdk:11
+WORKDIR /app
+COPY HelloWorld.java .
+RUN javac HelloWorld.java
+CMD ["java", "HelloWorld"]
+Copy
+Commands
+git init
+git add .
+git commit -m "Java Docker app"
+git remote add origin <your-repo-url>
+git push origin main
 
-results = []
-for name, model in models.items():
-model.fit(X_train, y_train)
-y_pred = model.predict(X_test)
+docker build -t hello-java .
+docker tag hello-java <dockerhub-username>/hello-java:latest
+docker login
+docker push <dockerhub-username>/hello-java:latest
+Copy
+Program 2 — C + Docker + Git
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: C program, Docker image, push to GitHub & DockerHub
+hello.c
+#include <stdio.h>
+int main() {
+    printf("Hello from DevOps Lab in C!\n");
+    return 0;
+}
+Copy
+Dockerfile
+FROM gcc:latest
+WORKDIR /app
+COPY hello.c .
+RUN gcc -o hello hello.c
+CMD ["./hello"]
+Copy
+Commands
+git init && git add . && git commit -m "C Docker app"
+git remote add origin <repo-url> && git push origin main
 
-ConfusionMatrixDisplay.from_predictions(y_test, y_pred)
-plt.title(name + " - Confusion Matrix")
-plt.show()
+docker build -t hello-c .
+docker tag hello-c <user>/hello-c && docker push <user>/hello-c
+Copy
+Program 3 — HTML + Docker + Git
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: HTML page, Docker image, push to GitHub & DockerHub
+index.html
+<!DOCTYPE html>
+<html>
+<head><title>DevOps Lab</title></head>
+<body>
+    <h1>Hello from DevOps Lab HTML!</h1>
+</body>
+</html>
+Copy
+Dockerfile
+FROM nginx:alpine
+COPY index.html /usr/share/nginx/html/index.html
+Copy
+Commands
+docker build -t html-app .
+docker run -d -p 8080:80 html-app
+docker tag html-app <user>/html-app && docker push <user>/html-app
+Copy
+Program 4 — Python + Docker + Git
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: Python program, Docker image, push to GitHub & DockerHub
+app.py
+print("Hello from DevOps Lab in Python!")
+Copy
+Dockerfile
+FROM python:3.10-slim
+WORKDIR /app
+COPY app.py .
+CMD ["python", "app.py"]
+Copy
+Commands
+docker build -t hello-python .
+docker run hello-python
+docker tag hello-python <user>/hello-python && docker push <user>/hello-python
+Copy
+Program 5 — Node + Docker + Git
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: Node.js program, Docker image, push
+app.js
+console.log("Hello from DevOps Lab in Node.js!");
+Copy
+Dockerfile
+FROM node:18
+WORKDIR /app
+COPY app.js .
+CMD ["node", "app.js"]
+Copy
+Commands
+docker build -t hello-node .
+docker run hello-node
+docker tag hello-node <user>/hello-node && docker push <user>/hello-node
+Copy
+Program 6 — Flask + Docker + Git
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: Flask program, Docker image, push
+app.py
+from flask import Flask
+app = Flask(__name__)
 
-results.append([
-name,
-accuracy_score(y_test, y_pred),
-precision_score(y_test, y_pred, average='macro'),
-recall_score(y_test, y_pred, average='macro'),
-compute_fpr_multiclass(y_test, y_pred),
-f1_score(y_test, y_pred, average='macro')
-])
+@app.route('/')
+def home():
+    return "Hello from Flask in DevOps Lab!"
 
-results = pd.DataFrame(
-results,
-columns=[
-"Model",
-"Accuracy",
-"Precision",
-"Recall (TPR)",
-"FPR",
-"F1 Score"
-]
-)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+Copy
+requirements.txt
+flask
+Copy
+Dockerfile
+FROM python:3.10-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+CMD ["python", "app.py"]
+Copy
+Commands
+docker build -t flask-app .
+docker run -d -p 5000:5000 flask-app
+docker tag flask-app <user>/flask-app && docker push <user>/flask-app
+Copy
+Program 7 — C + Jenkins
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: C program, push to GitHub, Jenkins job to execute
+prog.c
+#include <stdio.h>
+int main() {
+    printf("Hello from Jenkins C Job!\n");
+    return 0;
+}
+Copy
+Jenkins Job Setup
+Create a Freestyle project.
+Source Code Management: Git — enter repo URL.
+Build: Add build step Execute Shell:
+gcc -o prog prog.c
+./prog
+Copy
+Save and click Build Now.
+Program 8 — Python Calculator + Jenkins
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: Python ADD/SUB/MUL/DIV, push to GitHub, Jenkins job
+calc.py
+def add(a, b): return a + b
+def sub(a, b): return a - b
+def mul(a, b): return a * b
+def div(a, b): return a / b if b != 0 else "Cannot divide by zero"
 
-print(results)
-Output:
-Number of Samples: 178
-Number of Features: 13
-Classes: [0 1 2]
+a, b = 10, 5
+print(f"Add: {add(a,b)}, Sub: {sub(a,b)}, Mul: {mul(a,b)}, Div: {div(a,b)}")
+Copy
+Jenkins Job Setup
+Freestyle project with Git SCM.
+Build step Execute Shell:
+python3 calc.py
+Copy
+Program 9 — Java Reverse + Jenkins
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: Java program to reverse a number + Jenkins job
+ReverseNumber.java
+import java.util.Scanner;
+public class ReverseNumber {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter a number: ");
+        int n = sc.nextInt(), rev = 0;
+        while (n != 0) {
+            rev = rev * 10 + n % 10;
+            n /= 10;
+        }
+        System.out.println("Reversed: " + rev);
+    }
+}
+Copy
+Jenkins Job
+Freestyle project, Git SCM.
+Build step Execute Shell:
+javac ReverseNumber.java
+java ReverseNumber
+Copy
+Program 10 — Hello-World Docker + Jenkins Periodic Build
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: Docker commands to run Hello-World
+docker pull hello-world
+docker run hello-world
+Copy
+Q5: Jenkins job for shell commands, triggered periodically
+Freestyle project.
+Build Triggers > Build periodically: */5 * * * * (every 5 minutes).
+Build > Execute Shell:
+echo "Hello from Jenkins periodic build"
+date
+Copy
+Program 11 — HTML Registration Form + Jenkins Publish
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: HTML Registration form + Jenkins publish
+register.html
+<!DOCTYPE html>
+<html>
+<head><title>Registration Form</title></head>
+<body>
+    <h2>Registration Form</h2>
+    <form>
+        Name: <input type="text"><br>
+        Email: <input type="email"><br>
+        <input type="submit" value="Register">
+    </form>
+</body>
+</html>
+Copy
+Jenkins Job
+Freestyle project, Git SCM.
+Post-build Action > Publish HTML reports: set HTML directory to project workspace and index page to register.html.
+Program 12 — Jenkins Pipeline Job (Jenkinsfile from SCM)
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: Jenkins Pipeline using Jenkinsfile (SCM)
+Jenkinsfile (in Git repo)
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps { checkout scm }
+        }
+        stage('Build') {
+            steps { echo 'Building...' }
+        }
+        stage('Test') {
+            steps { echo 'Testing...' }
+        }
+        stage('Deploy') {
+            steps { echo 'Deploying...' }
+        }
+    }
+}
+Copy
+Jenkins Job Setup
+New Item > Pipeline.
+Pipeline > Definition: "Pipeline Script from SCM".
+Select Git, enter repo URL, script path: Jenkinsfile.
+Program 13 — Java & Python Pattern + Jenkins (File Param)
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: Pattern programs with file parameterization
+Pattern.java
+public class Pattern {
+    public static void main(String[] args) {
+        int n = 5;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= i; j++)
+                System.out.print("* ");
+            System.out.println();
+        }
+    }
+}
+Copy
+Pattern.py
+n = 5
+for i in range(1, n+1):
+    print("* " * i)
+Copy
+Jenkins Job (File Parameterization)
+Freestyle project, tick This project is parameterized.
+Add File Parameter (name: input.txt).
+Build step Execute Shell:
+javac Pattern.java && java Pattern
+python3 Pattern.py
+Copy
+Program 14 — Ubuntu Container + Jenkins Pipeline (5 stages)
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: Docker — run Ubuntu container named "MyContainer"
+docker run -it --name MyContainer ubuntu bash
+# Inside container:
+apt update && apt install -y curl
+echo "Hello from Ubuntu container"
+Copy
+Q5: Jenkins Pipeline with 5 stages
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') { steps { echo 'Checkout done' } }
+        stage('Build')    { steps { echo 'Build done' } }
+        stage('Test')     { steps { echo 'Test done' } }
+        stage('Package')  { steps { echo 'Package done' } }
+        stage('Deploy')   { steps { echo 'Deploy done' } }
+    }
+}
+Copy
+Program 15 — Python Container + k8s nginx Deployment
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: Docker — run Python image and execute commands
+docker run -it python:3.10-slim bash
+# Inside container:
+python -c "print('Hello from Python container')"
+exit
+Copy
+Q5: Kubernetes — nginx deployment
+kubectl create deployment nginx --image=nginx
+kubectl get pods
+kubectl expose deployment nginx --port=80 --type=NodePort
+kubectl get svc
+Copy
+Program 16 — Node Container + k8s Python Deployment
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: Docker — run Node image and execute commands
+docker run -it node:18 bash
+# Inside container:
+node -e "console.log('Hello from Node container')"
+exit
+Copy
+Q5: Kubernetes — Python deployment + kubectl commands
+kubectl create deployment python-app --image=python:3.10-slim -- sleep infinity
+kubectl get pods
+kubectl exec -it <pod-name> -- python -c "print('Hello from k8s Python')"
+Copy
+Program 17 — nginx Container + k8s Mongo Deployment
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: Docker — run nginx image and execute commands
+docker run -d -p 8080:80 --name mynginx nginx
+docker exec mynginx cat /etc/nginx/nginx.conf
+docker stop mynginx
+Copy
+Q5: Kubernetes — Mongo deployment
+kubectl create deployment mongo --image=mongo
+kubectl get pods
+kubectl logs <pod-name>
+Copy
+Program 18 — Containerized HTML (Registration Form) + Docker + Git
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: HTML Registration form containerised & pushed
+register.html
+<!DOCTYPE html>
+<html>
+<head><title>Registration</title></head>
+<body>
+    <h2>Registration Form</h2>
+    <form>
+        Name: <input type="text" name="name"><br>
+        Email: <input type="email" name="email"><br>
+        <input type="submit">
+    </form>
+</body>
+</html>
+Copy
+Dockerfile
+FROM nginx:alpine
+COPY register.html /usr/share/nginx/html/index.html
+Copy
+Commands
+docker build -t reg-form .
+docker run -d -p 8080:80 reg-form
+docker tag reg-form <user>/reg-form && docker push <user>/reg-form
+git init && git add . && git commit -m "Registration form"
+git remote add origin <url> && git push origin main
+Copy
+Program 19 — Docker Compose: busybox ping
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: Docker Compose — two busybox containers, ping bbConB from bbConA
+docker-compose.yml
+version: '3'
+services:
+  bbcona:
+    image: busybox
+    container_name: bbConA
+    command: sleep 3600
+  bbconb:
+    image: busybox
+    container_name: bbConB
+    command: sleep 3600
+Copy
+Commands
+docker-compose up -d
+docker exec bbConA ping -c 4 bbConB
+docker-compose down
+Copy
+Program 20 — k8s nginx Deployment using YAML
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: Kubernetes nginx deployment via manifest file
+nginx-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+Copy
+Commands
+kubectl apply -f nginx-deployment.yaml
+kubectl get deployments
+kubectl get pods
+Copy
+Program 21 — k8s Node Deployment + Selenium (Open Website)
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: Kubernetes Node deployment + kubectl commands
+kubectl create deployment node-app --image=node:18 -- sleep infinity
+kubectl get pods
+kubectl exec -it <pod-name> -- node -e "console.log('Hello from Node in k8s')"
+Copy
+Q5: Selenium — open Google / College website
+const { Builder } = require('selenium-webdriver');
+
+(async function openSite() {
+    let driver = await new Builder().forBrowser('chrome').build();
+    await driver.get('https://www.google.com');
+    console.log(await driver.getTitle());
+    await driver.quit();
+})();
+Copy
+Program 22 — Selenium Login Validation Test
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: JavaScript login validation + Selenium test
+login.html (app under test)
+<!DOCTYPE html>
+<html>
+<body>
+    <input id="user" placeholder="Username">
+    <input id="pass" type="password" placeholder="Password">
+    <button onclick="alert('Login clicked')">Login</button>
+</body>
+</html>
+Copy
+Selenium test
+const { Builder, By } = require('selenium-webdriver');
+
+(async function loginTest() {
+    let driver = await new Builder().forBrowser('chrome').build();
+    await driver.get('file:///path/to/login.html');
+    await driver.findElement(By.id('user')).sendKeys('admin');
+    await driver.findElement(By.id('pass')).sendKeys('pass123');
+    await driver.findElement(By.css('button')).click();
+    console.log('Login test passed');
+    await driver.quit();
+})();
+Copy
+Program 23 — Selenium Exam Results Check
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: Fetch exam results from college website using Selenium
+const { Builder, By } = require('selenium-webdriver');
+
+(async function checkResults() {
+    let driver = await new Builder().forBrowser('chrome').build();
+    await driver.get('https://matrusri.skolo.in/');
+    let rollNo = await driver.findElement(By.name('rollno'));
+    await rollNo.sendKeys('123456');
+    let submit = await driver.findElement(By.css('input[type="submit"]'));
+    await submit.click();
+    console.log('Result page title:', await driver.getTitle());
+    await driver.quit();
+})();
+Copy
+Program 24 — Calculator WebApp + Selenium Test
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: Web calculator + Selenium test
+calc.html
+<!DOCTYPE html>
+<html>
+<body>
+    <input id="a" placeholder="Num 1">
+    <input id="b" placeholder="Num 2">
+    <button onclick="document.getElementById('r').innerText = Number(document.getElementById('a').value) + Number(document.getElementById('b').value)">Add</button>
+    <p id="r"></p>
+</body>
+</html>
+Copy
+Selenium test
+const { Builder, By } = require('selenium-webdriver');
+const assert = require('assert');
+
+(async function calcTest() {
+    let driver = await new Builder().forBrowser('chrome').build();
+    await driver.get('file:///path/to/calc.html');
+    await driver.findElement(By.id('a')).sendKeys('10');
+    await driver.findElement(By.id('b')).sendKeys('20');
+    await driver.findElement(By.css('button')).click();
+    let result = await driver.findElement(By.id('r')).getText();
+    assert.strictEqual(result, '30');
+    console.log('Calculator test passed');
+    await driver.quit();
+})();
+Copy
+Program 25 — Jenkins Remote Trigger (Java)
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: Jenkins job — execute Java program from Git, trigger remotely
+Sample Java (HelloWorld.java)
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello from remotely triggered Jenkins job!");
+    }
+}
+Copy
+Jenkins Setup
+Freestyle project, Git SCM.
+Build Triggers > Trigger builds remotely: set an auth token (e.g., myToken).
+Build > Execute Shell:
+javac HelloWorld.java && java HelloWorld
+Copy
+Remote trigger URL
+http://jenkins-server:8080/job/JobName/build?token=myToken
+Copy
+Program 26 — Jenkins SCM Polling (Python Calculator)
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: Jenkins job — Python Calc from Git, SCM polling (auto-execute on change)
+calc.py
+a, b = 15, 4
+print(f"Add: {a+b}, Sub: {a-b}, Mul: {a*b}, Div: {a/b}")
+Copy
+Jenkins Setup
+Freestyle project, Git SCM with repo URL.
+Build Triggers > Poll SCM: * * * * * (every minute).
+Build > Execute Shell: python3 calc.py
+Program 27 — Jenkins File & Variable Param (Java & Python Calculator)
+Q1: Five Git Commands and Their Usage
+Command	Usage
+git init	Initialises a new Git repository in the current directory.
+git add <file>	Stages a file (or all files with .) for the next commit.
+git commit -m "message"	Commits the staged changes with a descriptive message.
+git push origin <branch>	Pushes local commits to the remote repository.
+git pull origin <branch>	Fetches and merges changes from the remote branch.
+Q2: Five Docker Commands and Their Usage
+Command	Usage
+docker build -t <tag> .	Builds a Docker image from a Dockerfile in the current directory.
+docker run <image>	Runs a container from the specified image.
+docker ps	Lists all running containers.
+docker images	Lists all locally stored Docker images.
+docker push <username>/<image>	Pushes an image to Docker Hub.
+Q3: Five Kubernetes Commands and Their Usage
+Command	Usage
+kubectl get nodes	Lists all nodes in the cluster.
+kubectl get pods	Lists all pods in the default namespace.
+kubectl get deployments	Lists all deployments.
+kubectl create deployment <name> --image=<img>	Creates a new deployment from an image.
+kubectl expose deployment <name> --port=<port> --type=NodePort	Exposes a deployment as a service.
+Q4: Java & Python Calculator + Jenkins with File & Variable Parameterization
+Calculator.java
+public class Calculator {
+    public static void main(String[] args) {
+        int a = Integer.parseInt(args[0]);
+        int b = Integer.parseInt(args[1]);
+        System.out.println("Sum: " + (a + b));
+        System.out.println("Diff: " + (a - b));
+        System.out.println("Prod: " + (a * b));
+        System.out.println("Quot: " + (a / b));
+    }
+}
+Copy
+calc.py
+import sys
+a, b = int(sys.argv[1]), int(sys.argv[2])
+print(f"Add: {a+b}, Sub: {a-b}, Mul: {a*b}, Div: {a/b}")
+Copy
+Jenkins Setup (File & Variable Param)
+Freestyle project, tick This project is parameterized.
+Add String Parameter — name: NUM1, default: 10.
+Add String Parameter — name: NUM2, default: 5.
+Add File Parameter — name: data.txt.
+Build > Execute Shell:
+javac Calculator.java && java Calculator $NUM1 $NUM2
+python3 calc.py $NUM1 $NUM2
+echo "File uploaded: $(cat data.txt)"
